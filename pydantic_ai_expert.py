@@ -34,8 +34,8 @@ class PydanticAIDeps:
     openai_client: AsyncOpenAI
 
 system_prompt = """
-You are an expert at CUHK Medical Center - that you have access to all the documentation to,
-including examples, an API reference, and other resources to the CUHK Medical Center
+You are an expert at CatoMind - that you have access to all the documentation to,
+including examples, an API reference, and other resources to the CatoMind
 
 Your only job is to assist with this and you don't answer other questions besides describing what you are able to do.
 
@@ -84,7 +84,7 @@ async def retrieve_relevant_documentation(ctx: RunContext[PydanticAIDeps], user_
         
         # Query Supabase for relevant documents
         result = ctx.deps.supabase.rpc(
-            'match_site_pages',
+            'match_site_pages_catomind',
             {
                 'query_embedding': query_embedding,
                 'match_count': 5,
@@ -122,7 +122,7 @@ async def list_documentation_pages(ctx: RunContext[PydanticAIDeps]) -> List[str]
     """
     try:
         # Query Supabase for unique URLs where source is pydantic_ai_docs
-        result = ctx.deps.supabase.from_('site_pages') \
+        result = ctx.deps.supabase.from_('site_pages_catomind') \
             .select('url') \
             .eq('metadata->>source', 'pydantic_ai_docs') \
             .execute()
@@ -152,7 +152,7 @@ async def get_page_content(ctx: RunContext[PydanticAIDeps], url: str) -> str:
     """
     try:
         # Query Supabase for all chunks of this URL, ordered by chunk_number
-        result = ctx.deps.supabase.from_('site_pages') \
+        result = ctx.deps.supabase.from_('site_pages_catomind') \
             .select('title, content, chunk_number') \
             .eq('url', url) \
             .eq('metadata->>source', 'pydantic_ai_docs') \
