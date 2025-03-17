@@ -9,14 +9,22 @@ import os
 
 from pydantic_ai import Agent, ModelRetry, RunContext
 from pydantic_ai.models.openai import OpenAIModel
-from openai import AsyncOpenAI
+from pydantic_ai.providers.openai import OpenAIProvider
+from openai import AsyncOpenAI, AsyncAzureOpenAI
 from supabase import Client
 from typing import List
 
 load_dotenv()
 
 llm = os.getenv('LLM_MODEL', 'gpt-4o-mini')
-model = OpenAIModel(llm)
+
+client = AsyncAzureOpenAI(
+    azure_endpoint=os.getenv('AZURE_OPENAI_ENDPOINT'),
+    api_version=os.getenv('AZURE_API_VERSION'),
+    api_key=os.getenv('AZURE_OPENAI_API_KEY'),
+)
+
+model = OpenAIModel(llm, provider=OpenAIProvider(openai_client=client))
 
 logfire.configure(send_to_logfire='if-token-present')
 

@@ -11,13 +11,17 @@ from urllib.parse import urlparse
 from dotenv import load_dotenv
 
 from crawl4ai import AsyncWebCrawler, BrowserConfig, CrawlerRunConfig, CacheMode
-from openai import AsyncOpenAI
+from openai import AsyncOpenAI, AsyncAzureOpenAI
 from supabase import create_client, Client
 
 load_dotenv()
 
 # Initialize OpenAI and Supabase clients
-openai_client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+openai_client = AsyncAzureOpenAI(
+    azure_endpoint=os.getenv('AZURE_OPENAI_ENDPOINT'),
+    api_version=os.getenv('AZURE_API_VERSION'),
+    api_key=os.getenv('AZURE_OPENAI_API_KEY'),
+)
 supabase: Client = create_client(
     os.getenv("SUPABASE_URL"),
     os.getenv("SUPABASE_SERVICE_KEY")
