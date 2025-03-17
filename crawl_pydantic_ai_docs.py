@@ -155,7 +155,7 @@ async def insert_chunk(chunk: ProcessedChunk):
             "embedding": chunk.embedding
         }
         
-        result = supabase.table("site_pages_catomind").insert(data).execute()
+        result = supabase.table("site_pages_poly_kteo").insert(data).execute()
         print(f"Inserted chunk {chunk.chunk_number} for {chunk.url}")
         return result
     except Exception as e:
@@ -218,7 +218,7 @@ async def crawl_parallel(urls: List[str], max_concurrent: int = 5):
 
 def get_pydantic_ai_docs_urls() -> List[str]:
     """Get URLs from Pydantic AI docs sitemap."""
-    sitemap_url = "https://www.xml-sitemaps.com/download/www.catomind.com-8e9aa7228/sitemap.xml?view=1"
+    sitemap_url = "https://www.xml-sitemaps.com/download/polyukteo.10u.org-74a987ba3/sitemap.xml?view=1"
     try:
         response = requests.get(sitemap_url)
         response.raise_for_status()
