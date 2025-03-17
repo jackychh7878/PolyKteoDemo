@@ -5,3 +5,4 @@ streamlit
 pydantic-ai-slim[openai,logfire]
 supabase
 crawl4ai
+requests
