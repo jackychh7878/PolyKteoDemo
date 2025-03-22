@@ -10,3 +10,4 @@ sqlalchemy
 psycopg2-binary
 pgvector
 flask
+flask[async]
