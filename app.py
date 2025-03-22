@@ -4,7 +4,7 @@ from typing import List
 from flask import Flask, request, jsonify
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from PolyKteoDemo.src.postgres_embedding import PatentsList, get_embedding
+from src.postgres_embedding import PatentsList, get_embedding
 import asyncio
 
 # Create Flask app
