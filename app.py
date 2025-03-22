@@ -38,10 +38,16 @@ def search_patents():
     Query parameters:
     - query: The search query to find similar patents
     - limit: Maximum number of results to return (default: 10)
+    - confidence_level: Minimum similarity score threshold (default: 0.0)
     """
     # Get query parameters
     query = request.args.get('query')
-    limit = request.args.get('limit', default=10, type=int)
+    limit = request.args.get('limit', default=20, type=int)
+    confidence_level = request.args.get('confidence_level', default=0.2, type=float)
+    
+    # Validate confidence_level is between 0 and 1
+    if confidence_level < 0 or confidence_level > 1:
+        return jsonify({"error": "confidence_level must be between 0 and 1"}), 400
     
     if not query:
         return jsonify({"error": "Query parameter is required"}), 400
@@ -54,16 +60,19 @@ def search_patents():
         # We need to run the async function in a synchronous context
         query_embedding = asyncio.run(get_embedding(query))
         
+        # Calculate similarity score expression
+        similarity_score = (1 - PatentsList.embedding.cosine_distance(query_embedding)).label("similarity")
+        
         # Perform similarity search using cosine distance
         # The <-> operator in pgvector calculates cosine distance
         results = (
             db.query(
                 PatentsList,
-                # Calculate similarity score (1 - distance) for better readability
-                # Lower distance = higher similarity
-                (1 - PatentsList.embedding.cosine_distance(query_embedding)).label("similarity")
+                similarity_score
             )
             .filter(PatentsList.embedding.is_not(None))
+            # Apply confidence level filter directly in the query
+            .filter(similarity_score >= confidence_level)
             .order_by(PatentsList.embedding.cosine_distance(query_embedding))
             .limit(limit)
             .all()
