@@ -1,10 +1,10 @@
 import os
 from dotenv import load_dotenv
-from typing import List, Optional
+from typing import List
 from flask import Flask, request, jsonify
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from postgres_embedding import PatentsList, get_embedding
+from PolyKteoDemo.src.postgres_embedding import PatentsList, get_embedding
 import asyncio
 
 # Create Flask app
