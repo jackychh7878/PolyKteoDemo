@@ -94,7 +94,7 @@ def search_patents():
         db.close()
 
 @app.route('/get_embedding', methods=['POST'])
-async def get_embedding() -> List[float]:
+async def return_embedding() -> List[float]:
     """Get embedding vector from OpenAI."""
     data = request.get_json()
     text = data.get('text')
