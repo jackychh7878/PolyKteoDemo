@@ -6,3 +6,7 @@ pydantic-ai-slim[openai,logfire]
 supabase
 crawl4ai
 requests
+sqlalchemy
+psycopg2-binary
+pgvector
+flask
